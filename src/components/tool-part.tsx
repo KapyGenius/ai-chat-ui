@@ -1,6 +1,6 @@
 import { Tool, ToolContent, ToolHeader, ToolInput, ToolOutput } from '@/components/ai-elements/tool'
-import { CodeBlock } from '@/components/ai-elements/code-block'
 import { ToolApprovalPrompt } from '@/components/tool-approval-prompt'
+import { ToolOutputCode } from '@/components/tool-output-code'
 import { RunCodeInput } from '@/components/run-code-input'
 import { isRunCodeOutput, RunCodeOutput } from '@/components/run-code-output'
 import type { ChatAddToolApproveResponseFunction, DynamicToolUIPart, ToolUIPart } from 'ai'
@@ -12,7 +12,8 @@ interface ToolPartProps {
 }
 
 export function ToolPart({ part, onApprovalResponse }: ToolPartProps) {
-  const [open, setOpen] = useState(part.state === 'approval-requested')
+  const approval = 'approval' in part ? part.approval : undefined
+  const [open, setOpen] = useState(() => part.state === 'approval-requested' || Boolean(approval))
 
   // Auto-open the card whenever an approval is requested — `defaultOpen` only
   // runs at mount, but the transition into `approval-requested` happens after
@@ -22,7 +23,6 @@ export function ToolPart({ part, onApprovalResponse }: ToolPartProps) {
   }, [part.state])
 
   const toolName = part.type === 'dynamic-tool' ? part.toolName : part.type.split('-').slice(1).join('-')
-  const approval = 'approval' in part ? part.approval : undefined
   const isRunCode = toolName === 'run_code'
 
   return (
@@ -33,19 +33,20 @@ export function ToolPart({ part, onApprovalResponse }: ToolPartProps) {
         <ToolHeader type={part.type} state={part.state} />
       )}
       <ToolContent>
-        {isRunCode ? <RunCodeInput input={part.input} /> : <ToolInput input={part.input} />}
-        {approval && (
-          <ToolApprovalPrompt approval={approval} state={part.state} onApprovalResponse={onApprovalResponse} />
+        {open && (
+          <>
+            {isRunCode ? <RunCodeInput input={part.input} /> : <ToolInput input={part.input} />}
+            {approval && (
+              <ToolApprovalPrompt approval={approval} state={part.state} onApprovalResponse={onApprovalResponse} />
+            )}
+            {(part.state === 'output-available' || part.state === 'output-error') &&
+              (isRunCode && !part.errorText && isRunCodeOutput(part.output) ? (
+                <RunCodeOutput output={part.output} />
+              ) : (
+                <ToolOutput errorText={part.errorText} output={<ToolOutputCode output={part.output} />} />
+              ))}
+          </>
         )}
-        {(part.state === 'output-available' || part.state === 'output-error') &&
-          (isRunCode && !part.errorText && isRunCodeOutput(part.output) ? (
-            <RunCodeOutput output={part.output} />
-          ) : (
-            <ToolOutput
-              errorText={part.errorText}
-              output={<CodeBlock code={JSON.stringify(part.output, null, 2)} language="json" />}
-            />
-          ))}
       </ToolContent>
     </Tool>
   )
