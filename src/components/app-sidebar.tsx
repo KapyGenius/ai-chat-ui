@@ -123,7 +123,7 @@ export function AppSidebar() {
           <div className="ml-2 flex items-center">
             <h1 className="text-l font-medium text-balance truncate whitespace-nowrap">
               <img src={logoSvg} className="inline h-4 mr-2 mb-1" />
-              <span className="group-data-[state=collapsed]:invisible">Pydantic AI</span>
+              <span className="group-data-[state=collapsed]:invisible">FH Modul Agent</span>
             </h1>
           </div>
         </SidebarHeader>

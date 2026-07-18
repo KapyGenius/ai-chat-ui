@@ -17,7 +17,7 @@ test.describe('chat', () => {
   test('clears input after sending', async ({ page }) => {
     await page.goto('/')
     await sendMessage(page, 'text', 'Hello')
-    const input = page.getByPlaceholder('What would you like to know?')
+    const input = page.getByPlaceholder('Ask any question about study modules of the FH SWF')
     await expect(input).toHaveValue('')
   })
 })

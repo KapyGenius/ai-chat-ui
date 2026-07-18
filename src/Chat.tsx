@@ -386,6 +386,7 @@ const ChatInner = () => {
             }}
             value={input}
             autoFocus={true}
+            placeholder="Ask any question about study modules of the FH SWF"
           />
           <PromptInputToolbar>
             <PromptInputTools>
@@ -473,7 +474,11 @@ const ChatInner = () => {
                 }}
               />
             </PromptInputTools>
-            <PromptInputSubmit disabled={!input} status={status} />
+            <PromptInputSubmit
+              disabled={!input}
+              status={status}
+              className="bg-primary text-primary-foreground hover:bg-primary/90"
+            />
           </PromptInputToolbar>
         </PromptInput>
       </div>

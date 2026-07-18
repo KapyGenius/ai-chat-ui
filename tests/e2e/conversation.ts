@@ -10,7 +10,7 @@ export async function sendMessage(page: Page, model: string, message: string) {
     .filter({ hasNotText: /^Effort:/ })
     .click()
   await page.getByRole('option', { name: model, exact: true }).click()
-  const input = page.getByPlaceholder('What would you like to know?')
+  const input = page.getByPlaceholder('Ask any question about study modules of the FH SWF')
   await input.fill(message)
   await input.press('Enter')
 }
