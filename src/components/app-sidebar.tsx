@@ -23,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
+  useSidebar,
 } from '@/components/ui/sidebar'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useConversationIdFromUrl } from '@/hooks/useConversationIdFromUrl'
@@ -83,8 +84,14 @@ function deleteConversation(conversationId: string) {
 export function AppSidebar() {
   const conversations = useConversations()
   const [conversationId] = useConversationIdFromUrl()
+  const { setOpenMobile } = useSidebar()
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [conversationToDelete, setConversationToDelete] = useState<ConversationEntry | null>(null)
+
+  const handleNavigation = (e: React.MouseEvent) => {
+    doLocalNavigation(e)
+    setOpenMobile(false)
+  }
 
   const handleDeleteClick = (e: React.MouseEvent, conversation: ConversationEntry) => {
     e.preventDefault()
@@ -126,7 +133,7 @@ export function AppSidebar() {
             <SidebarMenu className="mb-2">
               <SidebarMenuItem>
                 <SidebarMenuButton asChild tooltip="Start a new conversation">
-                  <a href={withBasePath('/')} onClick={doLocalNavigation}>
+                  <a href={withBasePath('/')} onClick={handleNavigation}>
                     <CirclePlus />
                     <span>New conversation</span>
                   </a>
@@ -142,7 +149,7 @@ export function AppSidebar() {
                       <SidebarMenuButton asChild tooltip={conversation.firstMessage} className="flex-1">
                         <a
                           href={withBasePath(conversation.id)}
-                          onClick={doLocalNavigation}
+                          onClick={handleNavigation}
                           className={cn('h-auto flex items-start gap-2', {
                             'bg-accent pointer-events-none': conversation.id === conversationId,
                           })}
