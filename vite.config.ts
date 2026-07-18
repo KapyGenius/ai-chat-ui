@@ -8,9 +8,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 const BACKEND_DEV_SERVER_PORT = process.env.BACKEND_PORT ?? 38001
 
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({  }) => ({
   plugins: [react(), tailwindcss(), tsconfigPaths({ root: __dirname })],
-  base: command === 'build' ? 'https://cdn.jsdelivr.net/npm/@pydantic/ai-chat-ui/dist/' : '',
+  // base: command === 'build' ? 'https://cdn.jsdelivr.net/npm/@pydantic/ai-chat-ui/dist/' : '',
   build: {
     assetsDir: 'assets',
   },
