@@ -311,8 +311,9 @@ const ChatInner = () => {
   }, [configQuery.data, model])
 
   return (
-    <>
-      <Conversation className="h-full">
+    <div className="flex flex-col flex-1 min-h-0 h-full">
+      {/* min-h-0: allow the flex child to shrink so StickToBottom's inner scroller can overflow */}
+      <Conversation className="min-h-0">
         <ConversationContent>
           {messages.map((message, messageIndex) => (
             <div key={message.id} className={message.role === 'user' ? 'group/user-message' : undefined}>
@@ -377,7 +378,7 @@ const ChatInner = () => {
         <ConversationScrollButton />
       </Conversation>
 
-      <div className="sticky bottom-0 p-3">
+      <div className="shrink-0 p-3">
         <PromptInput onSubmit={handleSubmit}>
           <PromptInputTextarea
             ref={textareaRef}
@@ -493,7 +494,7 @@ const ChatInner = () => {
       />
 
       <ToolFiltersDialog open={filtersDialogOpen} onOpenChange={setFiltersDialogOpen} />
-    </>
+    </div>
   )
 }
 
