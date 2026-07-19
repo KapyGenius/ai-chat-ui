@@ -105,9 +105,6 @@ const ChatInner = () => {
   // will fire sendMessage after the messages state has been committed.
   const pendingSendRef = useRef<{ text: string; model: string; builtinTools: string[] } | null>(null)
   const [sendTrigger, setSendTrigger] = useState(0)
-  // Safari iOS: scroll often sticks after the first streamed answer. Reload once
-  // when that first answer finishes; skip if the conversation already had one.
-  const reloadAfterFirstAnswerRef = useRef(false)
 
   const configQuery = useQuery({
     queryFn: getModels,
@@ -123,16 +120,11 @@ const ChatInner = () => {
   useEffect(() => {
     setEditingMessageId(null)
     if (conversationId === '/') {
-      reloadAfterFirstAnswerRef.current = false
       setMessages([])
     } else {
       getMessages(conversationId)
         .then((storedMessages) => {
           if (storedMessages) {
-            // Existing first answer → do not reload again on this conversation.
-            if (storedMessages.some((message) => message.role === 'assistant')) {
-              reloadAfterFirstAnswerRef.current = false
-            }
             setMessages(storedMessages)
 
             // Auto-send pending fork message after loading forked conversation
@@ -158,7 +150,6 @@ const ChatInner = () => {
       if (stripBasePath(theCurrentUrl.pathname) === '/') {
         const newConversationId = `/${nanoid()}`
         setConversationId(newConversationId)
-        reloadAfterFirstAnswerRef.current = true
 
         saveConversationEntry(newConversationId, input)
 
@@ -190,26 +181,6 @@ const ChatInner = () => {
       })
     }
   }, [throttledMessages, conversationId])
-
-  // Full reload after the conversation's first assistant answer finishes (Safari scroll workaround).
-  useEffect(() => {
-    if (!reloadAfterFirstAnswerRef.current) return
-    if (status !== 'ready') return
-    if (conversationId === '/') return
-
-    const assistantMessages = messages.filter((message) => message.role === 'assistant')
-    if (assistantMessages.length !== 1) return
-    if (hasIncompleteToolPart(assistantMessages[0].parts)) return
-
-    reloadAfterFirstAnswerRef.current = false
-    saveMessages(conversationId, messages)
-      .catch((err: unknown) => {
-        console.error('Failed to save messages before reload:', err)
-      })
-      .finally(() => {
-        window.location.reload()
-      })
-  }, [status, messages, conversationId])
 
   const handleStartEdit = useCallback((messageId: string) => {
     setEditingMessageId(messageId)
