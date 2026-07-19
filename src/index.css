@@ -138,11 +138,6 @@
 }
 
 @utility custom-scrollbar {
-  /* StickToBottom scroll child — needed for momentum scrolling on iOS Safari */
-  & > div {
-    -webkit-overflow-scrolling: touch;
-  }
-
   & > div::-webkit-scrollbar {
     width: 0.5rem;
   }

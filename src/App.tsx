@@ -35,13 +35,13 @@ export default function App() {
         <SidebarProvider defaultOpen>
           <AppSidebar />
 
-          <div className="relative flex flex-col justify-center flex-1 min-h-0 h-dvh overflow-hidden">
+          <div className="relative flex flex-col justify-center flex-1 h-screen overflow-hidden">
             <div className="absolute top-3 left-3 z-20 md:hidden">
               <SidebarTrigger />
             </div>
             <div
               className={cn(
-                'flex flex-col max-w-4xl mx-auto relative w-full min-h-0 basis-[100dvh] overflow-hidden',
+                'flex flex-col max-w-4xl mx-auto relative w-full basis-[100vh] overflow-hidden',
                 'has-[.stick-to-bottom:empty]:overflow-visible has-[.stick-to-bottom:empty]:basis-[0px] transition-[flex-basis] duration-200',
               )}
             >
