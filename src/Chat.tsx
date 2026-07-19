@@ -312,7 +312,7 @@ const ChatInner = () => {
 
   return (
     <>
-      <Conversation className="h-full">
+      <Conversation className="min-h-0">
         <ConversationContent>
           {messages.map((message, messageIndex) => (
             <div key={message.id} className={message.role === 'user' ? 'group/user-message' : undefined}>
@@ -377,7 +377,7 @@ const ChatInner = () => {
         <ConversationScrollButton />
       </Conversation>
 
-      <div className="sticky bottom-0 p-3">
+      <div className="shrink-0 bg-background p-3 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
         <PromptInput onSubmit={handleSubmit}>
           <PromptInputTextarea
             ref={textareaRef}
