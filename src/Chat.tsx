@@ -312,8 +312,8 @@ const ChatInner = () => {
 
   return (
     <>
-      <Conversation className="h-full">
-        <ConversationContent>
+      <Conversation className="min-h-0 h-full" resize="instant" initial="instant">
+        <ConversationContent scrollClassName="overflow-y-auto overscroll-y-contain">
           {messages.map((message, messageIndex) => (
             <div key={message.id} className={message.role === 'user' ? 'group/user-message' : undefined}>
               {message.role === 'assistant' &&
